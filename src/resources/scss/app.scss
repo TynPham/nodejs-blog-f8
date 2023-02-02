@@ -2,9 +2,16 @@
 
 a {
   text-decoration: none;
+  color: black;
 }
 
 h1 {
   font-size: 2rem;
   color: $red-color;
+}
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
 }
