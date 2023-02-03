@@ -1,10 +1,35 @@
-<div class="mt-4">
+<form method="post" action="/courses/handle-form-actions" class="mt-4">
   <h1>My Courses</h1>
-  <a href="/me/trash/courses" class="text-info">Trash</a>
+  <a href="/me/trash/courses" class="text-info">Trash ({{countDeleted}})</a>
+
+  <div class="mt-4 d-flex align-items-center gap-3">
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        value=""
+        id="checked-all"
+      />
+      <label class="form-check-label" for="checked-all">
+        Select all
+      </label>
+    </div>
+    <select
+      class="form-select-sm"
+      aria-label="Default select example"
+      name="action"
+      required
+    >
+      <option value="">Option</option>
+      <option value="delete">Delete</option>
+    </select>
+    <button class="btn btn-primary btn-submit-all disabled">Action</button>
+  </div>
 
   <table class="table mt-4">
     <thead>
       <tr>
+        <th></th>
         <th scope="col">#</th>
         <th scope="col">Name</th>
         <th scope="col">Slug</th>
@@ -16,6 +41,12 @@
     <tbody>
       {{#each courses}}
         <tr>
+          <td><input
+              class="form-check-input"
+              type="checkbox"
+              name="courseIds[]"
+              value="{{this._id}}"
+            /></td>
           <th scope="row">{{sum @index 1}}</th>
           <td>{{this.name}}</td>
           <td>{{this.slug}}</td>
@@ -45,7 +76,7 @@
       {{/each}}
     </tbody>
   </table>
-</div>
+</form>
 
 {{! form delete course }}
 <form method="post" id="form-delete"></form>
@@ -90,11 +121,30 @@
 </div>
 
 <script>
-  const exampleModal = document.getElementById('exampleModal'); const btn_delete
-  = document.getElementById('btn-delete'); const form_delete =
-  document.forms['form-delete']; var courseId; /*when dialog confirm clicked*/
+  const exampleModal = document.getElementById('exampleModal'); //////////////
+  const btn_delete = document.getElementById('btn-delete');///////////////////
+  const form_delete = document.forms['form-delete'];/////////////////////////
+  var courseId; ////////////////////////////////////////////////////////////
+  const checkedElementAll = document.getElementById('checked-all');///////////
+  const listChecked = document.querySelectorAll('input[name="courseIds[]"]');
+  const btnSubmitAll = document.querySelector('.btn-submit-all');//////////
+  /*when dialog confirm clicked*/ ////////////////////////////////////////
   exampleModal.addEventListener('show.bs.modal', event => { const button =
-  event.relatedTarget; courseId = button.getAttribute('data-bs-id'); })/*when
-  delete course btn clicked*/ btn_delete.onclick = () => { form_delete.action =
-  '/courses/' + courseId + '?_method=delete'; form_delete.submit(); }
+  event.relatedTarget; courseId = button.getAttribute('data-bs-id'); })///
+  /*when delete course btn clicked*/ /////////////////////////////////////
+  btn_delete.onclick = () => { form_delete.action = '/courses/' + courseId +
+  '?_method=delete'; form_delete.submit(); };//////////////////////////////////
+  // when checked btn clicked ////////////////////////////////////////////
+  checkedElementAll.onchange = function() {//////////////////////////////////
+  listChecked.forEach((e) => { e.checked = this.checked });checkDisableBtn()};
+  //when clicked list checked///////////////////////////////////////////////
+  listChecked.forEach((e) => { e.addEventListener('change', () => { var
+  isCheckedAll = listChecked.length ===
+  document.querySelectorAll('input[name="courseIds[]"]:checked').length;
+  checkedElementAll.checked = isCheckedAll; checkDisableBtn() }) });////////////
+  // re-render check all submit btn //////////////////////////////////////
+  function checkDisableBtn() { var isCheckedAll =
+  document.querySelectorAll('input[name="courseIds[]"]:checked').length; if
+  (isCheckedAll > 0) { btnSubmitAll.classList.remove('disabled'); } else {
+  btnSubmitAll.classList.add('disabled'); } }
 </script>
