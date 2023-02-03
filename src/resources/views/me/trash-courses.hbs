@@ -1,0 +1,132 @@
+<div class="mt-4">
+  <h1>
+    My Trash
+  </h1>
+  <a href="/me/stored/courses" class="text-info">
+    Course list
+  </a>
+
+  <table class="table mt-4">
+    <thead>
+      <tr>
+        <th scope="col">
+          #
+        </th>
+        <th scope="col">
+          Name
+        </th>
+        <th scope="col">
+          Slug
+        </th>
+        <th scope="col">
+          Created At
+        </th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each courses}}
+        <tr>
+          <th scope="row">
+            {{sum @index 1}}
+          </th>
+          <td>
+            {{this.name}}
+          </td>
+          <td>
+            {{this.slug}}
+          </td>
+          <td>
+            {{this.createdAt}}
+          </td>
+          <td>
+            <a
+              href="/courses/{{this._id}}/edit"
+              class="btn-restore"
+              data-bs-id="{{this._id}}"
+            >
+              Restore
+            </a>
+          </td>
+          <td>
+            <a
+              href="/courses/{{this._id}}/delete"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              data-bs-id="{{this._id}}"
+            >
+              Permanently deleted
+            </a>
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="5" class="text-center">
+            The trash empty.
+            <a href="/me/stored/courses" class="text-info">
+              Course list
+            </a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+<form method="post" id="form-delete"></form>
+<form method="post" id="form-restore"></form>
+
+{{! confirm delete course }}
+
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Delete course
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        The action cannot be undone. Do you still want to permanently delete?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger" id="btn-delete">
+          Permanently delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const exampleModal = document.getElementById("exampleModal"); const btn_delete
+  = document.getElementById("btn-delete"); const form_delete =
+  document.forms["form-delete"]; const form_restore =
+  document.forms["form-restore"]; const listBtnRestore =
+  document.querySelectorAll(".btn-restore"); var courseId; /*when dialog confirm
+  clicked*/ exampleModal.addEventListener("show.bs.modal", (event) => { const
+  button = event.relatedTarget; courseId = button.getAttribute("data-bs-id");
+  }); /*when delete course btn clicked*/ btn_delete.onclick = () => {
+  form_delete.action = "/courses/" + courseId + "/force?_method=delete";
+  form_delete.submit(); }; /*when restore btn clicked*/
+  listBtnRestore.forEach((item) => { item.addEventListener("click", (e) => {
+  e.preventDefault(); courseId = item.getAttribute("data-bs-id");
+  form_restore.action = "/courses/" + courseId + "/restore?_method=patch";
+  form_restore.submit();}); });
+</script>

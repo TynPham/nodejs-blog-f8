@@ -1,5 +1,6 @@
 <div class="mt-4">
   <h1>My Courses</h1>
+  <a href="/me/trash/courses" class="text-info">Trash</a>
 
   <table class="table mt-4">
     <thead>
@@ -31,6 +32,16 @@
             >Delete</a>
           </td>
         </tr>
+      {{else}}
+        <tr>
+          <td colspan="5" class="text-center">
+            You haven't posted a course yet.<a
+              href="/courses/create"
+              class="text-info"
+            >Post a course</a>
+          </td>
+        </tr>
+
       {{/each}}
     </tbody>
   </table>
@@ -81,9 +92,9 @@
 <script>
   const exampleModal = document.getElementById('exampleModal'); const btn_delete
   = document.getElementById('btn-delete'); const form_delete =
-  document.forms['form-delete']; var courseId;
+  document.forms['form-delete']; var courseId; /*when dialog confirm clicked*/
   exampleModal.addEventListener('show.bs.modal', event => { const button =
-  event.relatedTarget; courseId = button.getAttribute('data-bs-id'); })
-  btn_delete.onclick = () => { form_delete.action = '/courses/' + courseId +
-  '?_method=delete'; form_delete.submit(); }
+  event.relatedTarget; courseId = button.getAttribute('data-bs-id'); })/*when
+  delete course btn clicked*/ btn_delete.onclick = () => { form_delete.action =
+  '/courses/' + courseId + '?_method=delete'; form_delete.submit(); }
 </script>
