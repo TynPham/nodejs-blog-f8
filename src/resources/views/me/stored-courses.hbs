@@ -31,9 +31,15 @@
       <tr>
         <th></th>
         <th scope="col">#</th>
-        <th scope="col">Name</th>
-        <th scope="col">Slug</th>
-        <th scope="col">Created At</th>
+        <th scope="col">Name
+          {{{sortable "name" _sort}}}
+        </th>
+        <th scope="col">Slug
+          {{{sortable "slug" _sort}}}
+        </th>
+        <th scope="col">Created At
+          {{{sortable "createdAt" _sort}}}
+        </th>
         <th scope="col"></th>
         <th scope="col"></th>
       </tr>
